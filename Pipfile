@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+behave = "*"
+requests = "*"
+pytest = "*"
+requests-mock = "*"
+jsonschema = "*"
+django = "*"
+mysqlclient = "*"
+djangorestframework = "*"
+
+[requires]
+python_version = "3.9"
+
+[scripts]
+server = "python manage.py runserver"
