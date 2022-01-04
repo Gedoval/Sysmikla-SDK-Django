@@ -11,8 +11,70 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
+import environ
+import sentry_sdk
+
+sentry_sdk.init(
+    "https://e1e8bf4be5fd482f837b407529cab7a7@o1106595.ingest.sentry.io/6133200",
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
+env = environ.Env()
+root_path = environ.Path(__file__) - 2
+
+ENV = env('DJANGO_ENV')
+DEBUG = env.bool('DEBUG', default=False)
+SECRET_KEY = env('SECRET_KEY')
+DATABASES = {'default': env.db('DATABASE_URL')}
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+
+LOGS_ROOT = env('LOGS_ROOT', default=root_path('logs'))
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console_format': {
+            'format': '%(name)-12s %(levelname)-8s %(message)s'
+        },
+        'file_format': {
+            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'console_format'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOGS_ROOT, 'django.log'),
+            'maxBytes': 1024 * 1024 * 15,  # 15MB
+            'backupCount': 10,
+            'formatter': 'file_format',
+        },
+    },
+    'loggers': {
+        'django': {
+            'level': 'INFO',
+            'handlers': ['console', 'file'],
+            'propagate': False,
+        },
+        'apps': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file'],
+            'propagate': False,
+        }
+    }
+}
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,16 +83,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%0-k21tz8cx-0mex)r4$2pn8z*(s$)rc%j_1wuyymwemk=#@kq'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECRET_KEY = 'django-insecure-%0-k21tz8cx-0mex)r4$2pn8z*(s$)rc%j_1wuyymwemk=#@kq'
 
 ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +96,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mercadolibre.apps.MercadolibreConfig',
+    'apps.mercadolibre',
     'rest_framework'
 ]
 
@@ -52,7 +110,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Sysmika_SDK.urls'
+ROOT_URLCONF = 'conf.urls'
 
 TEMPLATES = [
     {
@@ -70,21 +128,21 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Sysmika_SDK.wsgi.application'
+WSGI_APPLICATION = 'conf.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Sysmika',
-        'USER': 'okabe',
-        'PASSWORD': 'ffsquall',
-        'HOST': 'localhost'
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'Sysmika',
+#         'USER': 'okabe',
+#         'PASSWORD': 'ffsquall',
+#         'HOST': 'localhost'
+#     }
+# }
 
 
 # Password validation

@@ -1,12 +1,12 @@
-import django
-from django.test import TestCase
-from django.test import Client
-import requests_mock
-from pathlib import Path
 import json
-from constants import Constants as CONST
-from Sysmika_SDK.Sysmika_SDK import settings
 import unittest
+from pathlib import Path
+
+from constants import Constants as CONST
+from django.test import Client
+
+from conf import settings
+
 
 class Algo(unittest.TestCase):
     BASE_DIR = Path(__file__).resolve().parent.parent

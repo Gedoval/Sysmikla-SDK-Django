@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import AccessToken, User, RealState
+
+from .models import AccessToken, RealState, User
+
 
 class AccessTokenSerializer(serializers.ModelSerializer):
     class Meta:

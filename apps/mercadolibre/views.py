@@ -1,11 +1,12 @@
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .constants import Constants as CONST
 from .invoker import MercadoLibreInvoker
-from .serializers import AccessTokenSerializer, UserSerializer
 from .models import User
-from rest_framework.views import APIView
-import pdb
+from .serializers import AccessTokenSerializer, UserSerializer
+
 
 class AccessToken(APIView):
     def get(self, request):

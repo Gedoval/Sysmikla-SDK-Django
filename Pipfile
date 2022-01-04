@@ -12,9 +12,17 @@ jsonschema = "*"
 django = "*"
 mysqlclient = "*"
 djangorestframework = "*"
+django-environ = "*"
+sentry-sdk = "*"
+celery = "*"
 
 [requires]
 python_version = "3.9"
 
 [scripts]
 server = "python manage.py runserver"
+
+[dev-packages]
+pytest-django = "*"
+flake8 = "*"
+isort = "*"

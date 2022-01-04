@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class AccessToken(models.Model):
     access_token = models.CharField(max_length=500)
     token_type = models.CharField(max_length=100)

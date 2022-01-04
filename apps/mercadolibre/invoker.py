@@ -1,7 +1,9 @@
 import requests
-from .constants import Constants as CONST
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.response import Response
+
+from .constants import Constants as CONST
+
 
 class MercadoLibreInvoker:
 
