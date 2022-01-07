@@ -1,5 +1,4 @@
 from django.db import models
-from .serializers import AccessTokenSerializer, UserSerializer
 
 class AccessToken(models.Model):
     access_token = models.CharField(max_length=500)

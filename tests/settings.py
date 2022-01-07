@@ -26,63 +26,17 @@ sentry_sdk.init(
     # We recommend adjusting this value in production.
     traces_sample_rate=1.0
 )
-dotenv_path = join(dirname(__file__), '.env.test')
-load_dotenv(dotenv_path)
-
 env = environ.Env()
-env.read_env('.env.test')
 root_path = environ.Path(__file__) - 2
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env.test'))
 
 ENV = env('DJANGO_ENV')
 DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY')
 DATABASES = {'default': env.db('DATABASE_URL')}
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-
-LOGS_ROOT = env('LOGS_ROOT', default=root_path('logs'))
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'console_format': {
-            'format': '%(name)-12s %(levelname)-8s %(message)s'
-        },
-        'file_format': {
-            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        }
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'console_format'
-        },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOGS_ROOT, 'django.log'),
-            'maxBytes': 1024 * 1024 * 15,  # 15MB
-            'backupCount': 10,
-            'formatter': 'file_format',
-        },
-    },
-    'loggers': {
-        'django': {
-            'level': 'INFO',
-            'handlers': ['console', 'file'],
-            'propagate': False,
-        },
-        'apps': {
-            'level': 'DEBUG',
-            'handlers': ['console', 'file'],
-            'propagate': False,
-        }
-    }
-}
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/

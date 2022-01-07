@@ -14,9 +14,10 @@ mysqlclient = "*"
 djangorestframework = "*"
 django-environ = "*"
 sentry-sdk = "*"
-celery = "*"
+celery = {extras = ["redis"], version = "*"}
 environ = "*"
 pyhamcrest = "*"
+redis = "*"
 
 [requires]
 python_version = "3.9"

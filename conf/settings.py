@@ -27,13 +27,15 @@ sentry_sdk.init(
 )
 env = environ.Env()
 root_path = environ.Path(__file__) - 2
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 ENV = env('DJANGO_ENV')
 DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY')
 DATABASES = {'default': env.db('DATABASE_URL')}
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 LOGS_ROOT = env('LOGS_ROOT', default=root_path('logs'))
 
 LOGGING = {
@@ -75,9 +77,6 @@ LOGGING = {
         }
     }
 }
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/

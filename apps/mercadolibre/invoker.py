@@ -1,9 +1,6 @@
 import requests
-from rest_framework import status
-from rest_framework.response import Response
-
 from .constants import Constants as CONST
-
+from .exceptions import BadTokenException
 
 class MercadoLibreInvoker:
 
@@ -15,6 +12,8 @@ class MercadoLibreInvoker:
         headers = {"content-type": "application/x-www-form-urlencoded", "accept": "application/json"}
         body = self.create_token_request_body(app_id, app_secret, tg_code, request_url)
         response = requests.post(CONST.API_HOST + CONST.TOKEN_URL, data=body, headers=headers)
+        if response.status_code != 200:
+            raise BadTokenException(response.json())
         return response.json()
 
 

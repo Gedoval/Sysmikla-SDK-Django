@@ -23,7 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         user['app_secret'] = app_secret
         return user
 
-
     class Meta:
         model = User
         fields = ['id', 'meli_id', 'sysmika_id', 'app_id', 'app_secret']
