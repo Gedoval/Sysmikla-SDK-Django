@@ -5,7 +5,8 @@ from .constants import Constants as CONST
 from .invoker import MercadoLibreInvoker
 from .exceptions import BadTokenException
 import apps.mercadolibre.tasks as tasks
-import pdb
+
+
 class AccessTokenAPI(APIView):
     def get(self, request):
         if not all(key in request.headers for key in (
@@ -21,8 +22,11 @@ class AccessTokenAPI(APIView):
             )
         except BadTokenException as e:
             return Response(e.message, status=status.HTTP_400_BAD_REQUEST)
-        tasks.store_token_and_user.delay(access_token, request.headers[CONST.APP_ID], request.headers[CONST.APP_SECRET],)
+        tasks.store_token_and_user.delay(
+            access_token,
+            request.headers[CONST.APP_ID],
+            request.headers[CONST.APP_SECRET],
+            request.headers[CONST.REDIRECT_URL]
+        )
         return Response(access_token, status=status.HTTP_200_OK)
-
-
 

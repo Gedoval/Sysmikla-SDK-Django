@@ -1,5 +1,6 @@
 [[source]]
 url = "https://pypi.org/simple"
+
 verify_ssl = true
 name = "pypi"
 
@@ -30,3 +31,8 @@ pytest-django = "*"
 flake8 = "*"
 isort = "*"
 python-dotenv = "*"
+pytest-celery = "*"
+celery = {extras = ["pytest"], version = "*"}
+behave = "*"
+install = "*"
+mysql-connector-python = "*"

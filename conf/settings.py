@@ -11,11 +11,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import logging
 import os
 from pathlib import Path
-
 import environ
 import sentry_sdk
+import redis
 
 sentry_sdk.init(
     "https://e1e8bf4be5fd482f837b407529cab7a7@o1106595.ingest.sentry.io/6133200",
@@ -29,14 +30,23 @@ env = environ.Env()
 root_path = environ.Path(__file__) - 2
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
 ENV = env('DJANGO_ENV')
 DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY')
 DATABASES = {'default': env.db('DATABASE_URL')}
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 LOGS_ROOT = env('LOGS_ROOT', default=root_path('logs'))
+if DEBUG:
+    logging.basicConfig(
+        level=logging.DEBUG
+    )
+    print(f'Using database: {DATABASES}')
+
+r = redis.Redis(
+    host=env('REDIS_HOST'),
+    port=env('REDIS_PORT'),
+    db=env('REDIS_DB')
+)
 
 LOGGING = {
     'version': 1,
@@ -78,6 +88,8 @@ LOGGING = {
     }
 }
 
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -85,7 +97,6 @@ LOGGING = {
 # SECRET_KEY = 'django-insecure-%0-k21tz8cx-0mex)r4$2pn8z*(s$)rc%j_1wuyymwemk=#@kq'
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -129,7 +140,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'conf.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -162,7 +172,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -173,7 +182,6 @@ TIME_ZONE = 'GMT'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

@@ -22,52 +22,45 @@ Each service exposes an API, which is defined using the [OpenAPI](https://swagge
 
 # Installation
 
-## Windows (for development only)
-
-* Install [Python 3.9](https://www.python.org/downloads/)
-* Install [Pip](https://www.geeksforgeeks.org/how-to-install-pip-on-windows/)
-* Install pipenv by running __pip install --user pipenv__
-* Clone this repo and install all depencies by running __pipenv install__ from the root of the repository
-* [Run Flask](#flask)
-
 ## Linux (for development/production)
 
 * Install Python 3.9 and Pip
 * Install Mysql, and python3.9-dev headers
+* Install Redis by running these commands
+  * $ redisurl="http://download.redis.io/redis-stable.tar.gz"
+  * $ curl -s -o redis-stable.tar.gz $redisurl
+  * $ sudo su root
+  * $ mkdir -p /usr/local/lib/
+  * $ chmod a+w /usr/local/lib/
+  * $ tar -C /usr/local/lib/ -xzf redis-stable.tar.gz
+  * $ rm redis-stable.tar.gz
+  * $ cd /usr/local/lib/redis-stable/
+  * $ make && make install
+* Create a config file in /etc/redis called **6379.conf** and with these configuration parameters
+  ``` 
+  # /etc/redis/6379.conf
+  port			6379
+  daemonize		yes
+  save			60 1
+  bind			127.0.0.1
+  tcp-keepalive		300
+  dbfilename		dump.rdb
+  dir			./
+  rdbcompression		yes`
+  ```
 * Run __sudo apt install pipenv__
 * Go to the root of the project and run __pipenv shell__ and __pipenv install__
-* Create all necessary databases and tables -> #TODO 
+* Create a Database in Mysql or any other DB engine
+* From the root of the project run __python manage.py makemigrations__ and then __python manage.py migrate__
+  * This will create all tables in the Database
+* Start the Redis server: __redis-server /etc/conf/6379.conf
+  * Verify that is running using __redis-cli PING__
+* Start the Celery worker from the root of the project __celery -A  conf worker --loglevel=info__ # TODO daemonize the worker
+* Start Django by running __pipenv run server__ from the project root.
 
-## Django
-
-#TODO 
-
-To run the Flask server (Windows):
-
-* On cmd type:
-  * __set FLASK_APP=run:run_app()__
-  *  __set FLASK_ENV=development__
-  * Go the directory __inbound__ in the integrations folder (for example: __src/integrations/mercadolibre/inbound__)
-  * Run __flask run__ . Use --port to change the port of the server (default is 5000) 
-  
-## Gunicorn
-
-Gunicorn is a WSGI HTTP Server that sits on top of the Flask API. It's recommended to use a reverse proxy (preferably Nginx) if the API is going to be exposed directly to the web
-
-* Ensure that all dependencies are installed in the virtual env by running __pipenv install__
-* From the root of the  repository run __gunicorn 'wsgi:run_app()'__ 
-* The file __gunicorn.conf.py__ contains configurations for the Gunicorn server. More can be found [here](https://docs.gunicorn.org/en/latest/settings.html)
 
 # Project Structure
-
-* The __src__ folder contains the application code. Inside the __integration__ direction we have a specific directory for each service.
-
-* The __test__ folder contains all unit tests for each service, and the necessary mock data. Check the [README](tests/README.md) for more information.
-
-# Current Integrations
-
- [MercadoLibre](src/integrations/mercadolibre/README.md)
- 
+ # TODO
 
 # Roadmap
 

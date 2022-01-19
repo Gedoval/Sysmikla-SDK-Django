@@ -14,18 +14,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 import environ
-import sentry_sdk
-from dotenv import load_dotenv
-from os.path import join, dirname
+import redis
 
-sentry_sdk.init(
-    "https://e1e8bf4be5fd482f837b407529cab7a7@o1106595.ingest.sentry.io/6133200",
-
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0
-)
 env = environ.Env()
 root_path = environ.Path(__file__) - 2
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,8 +26,11 @@ DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY')
 DATABASES = {'default': env.db('DATABASE_URL')}
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
-
+r = redis.Redis(
+    host=env('REDIS_HOST'),
+    port=env('REDIS_PORT'),
+    db=env('REDIS_DB')
+)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -88,21 +81,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'conf.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'Sysmika',
-#         'USER': 'okabe',
-#         'PASSWORD': 'ffsquall',
-#         'HOST': 'localhost'
-#     }
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
