@@ -7,6 +7,8 @@ class User(models.Model):
     app_id = models.CharField(max_length=500)
     app_secret = models.CharField(max_length=500)
     redirect_url = models.CharField(max_length=500, default='')
+    access_token = models.CharField(max_length=600, default='')
+    refresh_token = models.CharField(max_length=600, default='')
 
 class RealState(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

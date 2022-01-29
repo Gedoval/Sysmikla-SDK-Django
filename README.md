@@ -9,6 +9,17 @@
 
 
 
+# TODO List
+
+* Check the code for TODO tags using Intellij
+* Set up the following logic
+  * On Celery startup (for workers) check that all Users on the Django database are stored in Redis. Check the keys, if they are not present, serialize the User and store it in Redis
+  * Modify the model for User to also store access tokens and refresh tokens. Add a column with the TTL that was set up on Redis
+    * Every time a refresh token event is fired, update the User row on Django with the new tokens. Make a batch out of it to improve performance
+  * Find a way to address concurrency when we are refreshing a token. Meaning that if a user requests an operation on MercadoLibre we won't update the token until that transaction is completed
+  * Add proper testing to all of this.
+
+
 # About
 
 Tools to enhance the Sysmika ERPs by adding integrations with external systems. Each integration is built using
@@ -19,6 +30,16 @@ a microservice approach, in which each service (integration) comes OOTB with a b
 * Test suite
 
 Each service exposes an API, which is defined using the [OpenAPI](https://swagger.io/) specification. 
+
+
+# Celery
+
+Commands to start the worker and scheduler. For now we need a cmd for each, but we can daemonize them. Look into that.
+Always run these from inside a **pipenv shell** and if the DJango settings change in a meaningful way then restart the worker.
+The **conf** parameter refers to _conf/settings.py_
+
+* Worker: **celery -A  conf worker --loglevel=info**
+* Scheduler: **celery -A conf beat -l debug**
 
 # Installation
 

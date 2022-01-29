@@ -16,7 +16,6 @@ import os
 from pathlib import Path
 import environ
 import sentry_sdk
-import redis
 
 sentry_sdk.init(
     "https://e1e8bf4be5fd482f837b407529cab7a7@o1106595.ingest.sentry.io/6133200",
@@ -36,17 +35,16 @@ SECRET_KEY = env('SECRET_KEY')
 DATABASES = {'default': env.db('DATABASE_URL')}
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 LOGS_ROOT = env('LOGS_ROOT', default=root_path('logs'))
+REDIS = {
+    'REDIS_HOST': env('REDIS_HOST'),
+    'REDIS_PORT': env('REDIS_PORT'),
+    'REDIS_DB': env('REDIS_DB')
+}
 if DEBUG:
     logging.basicConfig(
         level=logging.DEBUG
     )
     print(f'Using database: {DATABASES}')
-
-r = redis.Redis(
-    host=env('REDIS_HOST'),
-    port=env('REDIS_PORT'),
-    db=env('REDIS_DB')
-)
 
 LOGGING = {
     'version': 1,

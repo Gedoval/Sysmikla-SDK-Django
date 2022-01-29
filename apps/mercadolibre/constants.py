@@ -7,6 +7,7 @@ class HeaderConstants:
     APP_TOKEN = "app-token"
     REFRESH_TOKEN = "refresh-token"
     ITEM_ID = "item-id"
+    USER_ID = "user-id"
 
 
 # Endpoints exposed by the MercadoLibre site
@@ -26,18 +27,22 @@ class ServiceEndpointsConstants(EndpointsConstants):
     GET_ACCESS_TOKEN = "auth/access_token"
     REFRESH_ACCESS_TOKEN = "auth/refresh_token"
     CATEGORIES = "categories"
-    CATEGORY_ATTRIBUTES = "categories/<category_id>"
+    CATEGORY = "categories/<str:category_id>/"
+    CATEGORY_ATTRIBUTES = "categories/<str:category_id>/attributes"
     CREATE_PUBLICATION = "publish/create"
     UPDATE_PUBLICATION = "publish/update"
     DELETE_PUBLICATION = "publish/delete"
     UPDATE_STATUS = "publish/update/<status>"
     LOCATION_GET_ARGENTINA = "location/ar"
     LOCATION_INFO = "location/<location>/<state_id>"
+    SITE_CATEGORIES = 'sites/<str:site>/categories'
 
 
 class UrlConstants(ServiceEndpointsConstants):
     API_HOST = "https://api.mercadolibre.com/"
+    SITES = 'sites'
 
 
 class Constants(UrlConstants):
-    pass
+    USER_LOCK = 'user_lock'
+    POLLING_INTERVAL = 1

@@ -16,6 +16,8 @@ class Constants:
         'meli_id',
         'app_id',
         'app_secret',
-        'redirect_url'
+        'redirect_url',
+        'access_token',
+        'refresh_token'
     ]
 
